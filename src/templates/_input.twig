@@ -1,0 +1,57 @@
+{% import "_includes/forms" as forms %}
+
+<div class="svg-field-container">
+    {% if value %}
+        <div class="svg-preview" style="border: 1px solid #e3e5e8; padding: 10px; margin-bottom: 10px; background: #fafafa;">
+            <label>{{ "Current SVG:"|t('svg-field') }}</label>
+            <div style="max-width: 200px; max-height: 200px; overflow: hidden;">
+                {{ value|raw }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="field">
+        <div class="heading">
+            <label for="{{ namespacedId }}">{{ "Upload SVG File"|t('svg-field') }}</label>
+        </div>
+        <div class="input">
+            <input type="file" 
+                   id="{{ namespacedId }}-file" 
+                   accept=".svg,image/svg+xml"
+                   style="margin-bottom: 10px;">
+            
+            <textarea 
+                id="{{ namespacedId }}" 
+                name="{{ name }}" 
+                rows="10" 
+                cols="50"
+                placeholder="{{ 'Paste SVG content here or upload a file above'|t('svg-field') }}"
+                style="width: 100%; font-family: monospace; font-size: 12px;">{{ value }}</textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var fileInput = document.getElementById('{{ namespacedId }}-file');
+    var textarea = document.getElementById('{{ namespacedId }}');
+    
+    if (fileInput && textarea) {
+        fileInput.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (file && file.type === 'image/svg+xml') {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    textarea.value = e.target.result;
+                    // Trigger change event for Craft's form handling
+                    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+                };
+                reader.readAsText(file);
+            } else if (file) {
+                alert('Please select a valid SVG file.');
+                fileInput.value = '';
+            }
+        });
+    }
+});
+</script>
