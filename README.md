@@ -52,18 +52,6 @@ Display SVG content in your Twig templates:
 ```twig
 {# Basic usage #}
 {{ entry.yourSvgField|raw }}
-
-{# Check if field has content #}
-{% if entry.yourSvgField %}
-    <div class="svg-container">
-        {{ entry.yourSvgField|raw }}
-    </div>
-{% endif %}
-
-{# Add custom classes or attributes #}
-<div class="my-svg-wrapper">
-    {{ entry.yourSvgField|raw }}
-</div>
 ```
 
 ## Technical Details
