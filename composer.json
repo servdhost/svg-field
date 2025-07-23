@@ -1,6 +1,6 @@
 {
-    "name": "servdhost/svg-field",
-    "description": "A Craft CMS 5 plugin for storing SVG files in custom fields",
+    "name": "servd/svg-field",
+    "description": "A Craft CMS plugin for storing SVG content in custom fields",
     "type": "craft-plugin",
     "version": "1.0.0",
     "keywords": [
@@ -8,17 +8,18 @@
         "cms",
         "craftcms",
         "craft-plugin",
-        "svg"
+        "svg",
+        "field"
     ],
     "support": {
-        "docs": "https://github.com/servdhost/svg-field/blob/master/README.md",
-        "issues": "https://github.com/servdhost/svg-field/issues"
+        "docs": "https://github.com/servdhost/craft-svg-field/blob/master/README.md",
+        "issues": "https://github.com/servdhost/craft-svg-field/issues"
     },
     "license": "MIT",
     "authors": [
         {
-            "name": "Your Name",
-            "homepage": "https://yourwebsite.com"
+            "name": "Servd",
+            "homepage": "https://servd.host"
         }
     ],
     "require": {
@@ -32,10 +33,13 @@
     "extra": {
         "name": "SVG Field",
         "handle": "svg-field",
-        "developer": "Joe Forshaw",
-        "developerUrl": "https://servd.host",
-        "documentationUrl": "https://github.com/servdhost/svg-field/blob/master/README.md",
-        "changelogUrl": "https://raw.githubusercontent.com/servdhost/svg-field/master/CHANGELOG.md",
-        "class": "servd\\svgfield\\Plugin"
+        "class": "servd\\svgfield\\Plugin",
+        "basePath": "src/",
+        "hasCpSettings": false,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/servdhost/craft-svg-field/master/CHANGELOG.md",
+        "components": {
+            "svgField": "servd\\svgfield\\fields\\SvgField"
+        }
     }
 }

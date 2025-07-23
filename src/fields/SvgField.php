@@ -6,20 +6,14 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\helpers\Html;
-use craft\web\assets\cp\CpAsset;
+use servd\svgfield\web\assets\field\SvgFieldAsset;
 use yii\db\Schema;
-use servd\svgfield\services\SvgSanitizer;
 
 class SvgField extends Field
 {
     public static function displayName(): string
     {
-        return Craft::t('svg-field', 'SVG Field');
-    }
-
-    public static function icon(): string
-    {
-        return 'image';
+        return Craft::t('svgfield', 'SVG Field');
     }
 
     public function getContentColumnType(): array|string
@@ -32,68 +26,86 @@ class SvgField extends Field
         if ($value === null || $value === '') {
             return null;
         }
-
-        // Sanitize SVG content
-        try {
-            $sanitizer = new SvgSanitizer();
-            return $sanitizer->sanitize($value);
-        } catch (\Exception $e) {
-            // Return original value if sanitization fails, validation will catch it
-            return $value;
-        }
+        return $value;
     }
 
     public function serializeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
-        return parent::serializeValue($value, $element);
+        return $value;
     }
 
-    protected function inputHtml(mixed $value, ?ElementInterface $element = null): string
+    protected function inputHtml(mixed $value, ?ElementInterface $element = null, bool $inline = false): string
     {
         $view = Craft::$app->getView();
-        $view->registerAssetBundle(CpAsset::class);
+        $view->registerAssetBundle(SvgFieldAsset::class);
 
         $id = Html::id($this->handle);
         $namespacedId = $view->namespaceInputId($id);
 
-        return $view->renderTemplate('svg-field/_input', [
-            'name' => $this->handle,
-            'value' => $value,
-            'field' => $this,
-            'id' => $id,
-            'namespacedId' => $namespacedId,
+        $html = '<div class="svg-field" data-field-handle="' . Html::encode($this->handle) . '">';
+        $html .= '<div class="svg-upload-area">';
+        
+        if ($value) {
+            $html .= '<div class="svg-preview-container">';
+            $html .= '<div class="svg-preview">' . $value . '</div>';
+            $html .= '<div class="svg-actions">';
+            $html .= '<button type="button" class="btn small svg-remove-btn">' . Craft::t('svgfield', 'Remove') . '</button>';
+            $html .= '<button type="button" class="btn small svg-replace-btn">' . Craft::t('svgfield', 'Replace') . '</button>';
+            $html .= '</div></div>';
+        } else {
+            $html .= '<div class="svg-upload-prompt">';
+            $html .= '<div class="svg-upload-icon">';
+            $html .= '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">';
+            $html .= '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>';
+            $html .= '<circle cx="8.5" cy="8.5" r="1.5"/>';
+            $html .= '<polyline points="21,15 16,10 5,21"/>';
+            $html .= '</svg></div>';
+            $html .= '<p>' . Craft::t('svgfield', 'Click to upload an SVG file or drag and drop') . '</p>';
+            $html .= '</div>';
+        }
+        
+        $html .= '<input type="file" class="svg-file-input" accept=".svg,image/svg+xml" style="display: none;">';
+        $html .= Html::hiddenInput($this->handle, $value, [
+            'id' => $namespacedId,
+            'class' => 'svg-content-input'
         ]);
+        $html .= '</div></div>';
+        
+        return $html;
     }
 
     public function getElementValidationRules(): array
     {
-        $rules = parent::getElementValidationRules();
-        
-        $rules[] = [
-            'validateSvgContent',
-            'skipOnEmpty' => true,
+        return [
+            ['validateSvgContent'],
         ];
-
-        return $rules;
     }
 
     public function validateSvgContent(ElementInterface $element): void
     {
         $value = $element->getFieldValue($this->handle);
         
-        if (!$value) {
-            return;
-        }
-
-        // Use sanitizer for validation
-        $sanitizer = new SvgSanitizer();
-        if (!$sanitizer->isValidSvg($value)) {
-            $element->addError($this->handle, Craft::t('svg-field', 'Invalid or potentially dangerous SVG content.'));
+        if ($value && !$this->isValidSvg($value)) {
+            $element->addError($this->handle, Craft::t('svgfield', 'The content must be a valid SVG.'));
         }
     }
 
-    public function getSvgContent(): ?string
+    private function isValidSvg(string $content): bool
     {
-        return $this->value;
+        $content = trim($content);
+        
+        if (empty($content)) {
+            return true;
+        }
+
+        libxml_use_internal_errors(true);
+        $doc = new \DOMDocument();
+        $loaded = $doc->loadXML($content);
+        
+        if (!$loaded) {
+            return false;
+        }
+
+        return $doc->documentElement->tagName === 'svg';
     }
 }

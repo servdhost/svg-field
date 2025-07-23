@@ -2,33 +2,38 @@
 
 namespace servd\svgfield;
 
-use craft\base\Model;
+use Craft;
 use craft\base\Plugin as BasePlugin;
-use craft\events\RegisterComponentTypesEvent;
 use craft\services\Fields;
-use craft\web\twig\variables\CraftVariable;
-use yii\base\Event;
+use craft\events\RegisterComponentTypesEvent;
 use servd\svgfield\fields\SvgField;
-use servd\svgfield\variables\SvgFieldVariable;
+use yii\base\Event;
 
 class Plugin extends BasePlugin
 {
+    public static $plugin;
+    
     public string $schemaVersion = '1.0.0';
-
-    public static function config(): array
-    {
-        return [
-            'components' => [
-                // Define component configs here...
-            ],
-        ];
-    }
+    public bool $hasCpSettings = false;
+    public bool $hasCpSection = false;
 
     public function init(): void
     {
         parent::init();
+        self::$plugin = $this;
 
-        // Register the SVG field type
+        // Register translations
+        Craft::$app->i18n->translations['svgfield'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'sourceLanguage' => 'en-US',
+            'basePath' => __DIR__ . '/translations',
+            'fileMap' => [
+                'svgfield' => 'svgfield.php',
+            ],
+        ];
+
+
+        // Register field type
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
@@ -37,20 +42,9 @@ class Plugin extends BasePlugin
             }
         );
 
-        // Register Twig variable
-        Event::on(
-            CraftVariable::class,
-            CraftVariable::EVENT_INIT,
-            function (Event $event) {
-                /** @var CraftVariable $variable */
-                $variable = $event->sender;
-                $variable->set('svgField', SvgFieldVariable::class);
-            }
+        Craft::info(
+            Craft::t('svgfield', '{name} plugin loaded', ['name' => $this->name]),
+            __METHOD__
         );
-    }
-
-    protected function createSettingsModel(): ?Model
-    {
-        return null;
     }
 }
