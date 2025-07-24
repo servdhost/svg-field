@@ -12,26 +12,12 @@ use yii\base\Event;
 class Plugin extends BasePlugin
 {
     public static $plugin;
-    
     public string $schemaVersion = '1.0.0';
-    public bool $hasCpSettings = false;
-    public bool $hasCpSection = false;
 
     public function init(): void
     {
         parent::init();
         self::$plugin = $this;
-
-        // Register translations
-        Craft::$app->i18n->translations['svgfield'] = [
-            'class' => 'yii\i18n\PhpMessageSource',
-            'sourceLanguage' => 'en-US',
-            'basePath' => __DIR__ . '/translations',
-            'fileMap' => [
-                'svgfield' => 'svgfield.php',
-            ],
-        ];
-
 
         // Register field type
         Event::on(
@@ -42,9 +28,6 @@ class Plugin extends BasePlugin
             }
         );
 
-        Craft::info(
-            Craft::t('svgfield', '{name} plugin loaded', ['name' => $this->name]),
-            __METHOD__
-        );
+        Craft::info($this->name . ' plugin loaded', __METHOD__);
     }
 }

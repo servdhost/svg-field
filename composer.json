@@ -1,5 +1,5 @@
 {
-    "name": "servd/svg-field",
+    "name": "servd/craft-svg-field",
     "description": "A Craft CMS plugin for storing SVG content in custom fields",
     "type": "craft-plugin",
     "version": "1.0.0",
@@ -12,8 +12,8 @@
         "field"
     ],
     "support": {
-        "docs": "https://github.com/servdhost/craft-svg-field/blob/master/README.md",
-        "issues": "https://github.com/servdhost/craft-svg-field/issues"
+        "docs": "https://github.com/servdhost/svg-field/blob/master/README.md",
+        "issues": "https://github.com/servdhost/svg-field/issues"
     },
     "license": "MIT",
     "authors": [
@@ -37,7 +37,7 @@
         "basePath": "src/",
         "hasCpSettings": false,
         "hasCpSection": false,
-        "changelogUrl": "https://raw.githubusercontent.com/servdhost/craft-svg-field/master/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/servdhost/svg-field/master/CHANGELOG.md",
         "components": {
             "svgField": "servd\\svgfield\\fields\\SvgField"
         }

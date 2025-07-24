@@ -13,7 +13,7 @@ class SvgField extends Field
 {
     public static function displayName(): string
     {
-        return Craft::t('svgfield', 'SVG Field');
+        return 'SVG Field';
     }
 
     public function getContentColumnType(): array|string
@@ -49,8 +49,8 @@ class SvgField extends Field
             $html .= '<div class="svg-preview-container">';
             $html .= '<div class="svg-preview">' . $value . '</div>';
             $html .= '<div class="svg-actions">';
-            $html .= '<button type="button" class="btn small svg-remove-btn">' . Craft::t('svgfield', 'Remove') . '</button>';
-            $html .= '<button type="button" class="btn small svg-replace-btn">' . Craft::t('svgfield', 'Replace') . '</button>';
+            $html .= '<button type="button" class="btn small svg-remove-btn">Remove</button>';
+            $html .= '<button type="button" class="btn small svg-replace-btn">Replace</button>';
             $html .= '</div></div>';
         } else {
             $html .= '<div class="svg-upload-prompt">';
@@ -60,7 +60,7 @@ class SvgField extends Field
             $html .= '<circle cx="8.5" cy="8.5" r="1.5"/>';
             $html .= '<polyline points="21,15 16,10 5,21"/>';
             $html .= '</svg></div>';
-            $html .= '<p>' . Craft::t('svgfield', 'Click to upload an SVG file or drag and drop') . '</p>';
+            $html .= '<p>Click to upload an SVG file or drag and drop</p>';
             $html .= '</div>';
         }
         
@@ -86,7 +86,7 @@ class SvgField extends Field
         $value = $element->getFieldValue($this->handle);
         
         if ($value && !$this->isValidSvg($value)) {
-            $element->addError($this->handle, Craft::t('svgfield', 'The content must be a valid SVG.'));
+            $element->addError($this->handle, 'The content must be a valid SVG.');
         }
     }
 

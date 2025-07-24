@@ -1,4 +1,4 @@
-# SVG Field Plugin for Craft CMS 5
+# SVG Field Plugin for Craft CMS
 
 A Craft CMS plugin that provides a custom field type for storing SVG content directly in the database.
 
@@ -26,7 +26,7 @@ This may be suitable if your site...
 Install via composer:
 
 ```
-composer require servd/svg-field
+composer require servd/craft-svg-field
 ```
 
 ## Usage
@@ -75,9 +75,3 @@ Display SVG content in your Twig templates:
 
 - Craft CMS 5.0+
 - PHP 8.2+
-- Modern web browser with JavaScript enabled
-
-
-## License
-
-MIT License - see LICENSE file for details
